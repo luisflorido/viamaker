@@ -5,6 +5,7 @@ module.exports = {
   globals: {
     __DEV__: 'readonly',
     document: 'readonly',
+    sessionStorage: 'readonly',
   },
   extends: [
     'plugin:react/recommended',
@@ -32,6 +33,7 @@ module.exports = {
     'no-console': 'off',
     'react/prop-types': 'off',
     'react/jsx-props-no-spreading': 'off',
+    camelcase: 'off',
   },
   settings: {
     'import/resolver': {
