@@ -9,6 +9,7 @@ function* login({ payload }) {
     const { status, data } = yield call(api.post, '/login', payload);
     if (status === 200) {
       sessionStorage.setItem('@access_token', data?.token);
+      localStorage.setItem('@refresh_token', data?.refreshToken);
       toast.success('Logado com sucesso!');
       yield put(Actions.loginSuccess(data));
     }
@@ -18,10 +19,19 @@ function* login({ payload }) {
   }
 }
 
+function logout() {
+  sessionStorage.removeItem('@access_token');
+  localStorage.removeItem('@refresh_token');
+}
+
 function* loginWatcher() {
   yield takeLatest(Types.LOGIN_REQUEST, login);
 }
 
+function* logoutWatcher() {
+  yield takeLatest(Types.LOGOUT, logout);
+}
+
 export default function* rootSaga() {
-  yield all([fork(loginWatcher)]);
+  yield all([fork(loginWatcher), fork(logoutWatcher)]);
 }

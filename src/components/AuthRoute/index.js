@@ -4,7 +4,7 @@ import { Redirect, Route } from 'react-router-dom';
 
 const AuthRoute = ({ component: TargetComponent, ...rest }) => {
   const { data } = useSelector((state) => state.auth);
-  const accessToken = sessionStorage.getItem('@token');
+  const accessToken = sessionStorage.getItem('@access_token');
 
   return (
     <Route

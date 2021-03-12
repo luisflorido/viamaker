@@ -22,15 +22,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const headerOptions = [
-  { key: 'LIST', label: 'Acessar escolas' },
-  { key: 'CREATE', label: 'Criar escola' },
+  { key: 'LIST', label: 'Acessar turmas' },
+  { key: 'CREATE', label: 'Criar turma' },
 ];
 
-function School({ history }) {
-  const { id: schoolId } = useParams();
+function Class({ history }) {
+  const { id: schoolId, idClass: classId } = useParams();
   const classes = useStyles();
   const [headerSelected, setHeaderSelected] = useState(
-    headerOptions[schoolId ? 1 : 0].key
+    headerOptions[classId ? 1 : 0].key
   );
 
   const handleCreateSuccess = () => {
@@ -38,32 +38,44 @@ function School({ history }) {
   };
 
   useEffect(() => {
-    if (schoolId) {
+    if (classId) {
       setHeaderSelected(headerOptions[1].key);
     }
-  }, [schoolId]);
+  }, [classId]);
 
   const handleEdit = (id) => {
-    history.push(`/school/${id}`);
+    history.push(`/school/${schoolId}/class/${id}`);
   };
 
   const handleInfo = (id) => {
-    history.push(`/school/${id}/class`);
+    history.push(`/school/${schoolId}/class/${id}/student`);
   };
 
   const renderContent = useCallback(() => {
     if (headerSelected === 'LIST') {
-      return <List handleEdit={handleEdit} handleInfo={handleInfo} />;
+      return (
+        <List
+          schoolId={schoolId}
+          handleEdit={handleEdit}
+          handleInfo={handleInfo}
+        />
+      );
     }
     if (headerSelected === 'CREATE') {
-      return <Create id={schoolId} handleCreateSuccess={handleCreateSuccess} />;
+      return (
+        <Create
+          id={classId}
+          schoolId={schoolId}
+          handleCreateSuccess={handleCreateSuccess}
+        />
+      );
     }
     return <></>;
   }, [headerSelected]);
 
   return (
     <div className={classes.root}>
-      <Drawer title="ESCOLAS" history={history}>
+      <Drawer title="TURMAS" history={history}>
         <Header
           selected={headerSelected}
           setSelected={setHeaderSelected}
@@ -75,4 +87,4 @@ function School({ history }) {
   );
 }
 
-export default School;
+export default Class;

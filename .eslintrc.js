@@ -6,6 +6,7 @@ module.exports = {
     __DEV__: 'readonly',
     document: 'readonly',
     sessionStorage: 'readonly',
+    localStorage: 'readonly',
   },
   extends: [
     'plugin:react/recommended',

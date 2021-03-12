@@ -2,6 +2,7 @@ export const Types = {
   LOGIN_REQUEST: 'AUTH/LOGIN_REQUEST',
   LOGIN_SUCCESS: 'AUTH/LOGIN_SUCCESS',
   LOGIN_ERROR: 'AUTH/LOGIN_ERROR',
+  LOGOUT: 'AUTH/LOGOUT',
 };
 
 const INITIAL_STATE = {
@@ -18,6 +19,8 @@ export default function Auth(state = INITIAL_STATE, action) {
       return { ...state, data: action.payload, loading: false };
     case Types.LOGIN_ERROR:
       return { ...state, loading: false };
+    case Types.LOGOUT:
+      return { ...state, loading: false, data: null, error: false };
     default:
       return state;
   }
@@ -34,5 +37,8 @@ export const Creators = {
   }),
   loginError: () => ({
     type: Types.LOGIN_ERROR,
+  }),
+  logout: () => ({
+    type: Types.LOGOUT,
   }),
 };

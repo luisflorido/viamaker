@@ -13,10 +13,9 @@ import {
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import EditIcon from '@material-ui/icons/Edit';
-import InfoIcon from '@material-ui/icons/Info';
 import DeleteIcon from '@material-ui/icons/Delete';
 import dayjs from 'dayjs';
-import { Creators as SchoolActions } from 'store/ducks/school';
+import { Creators as StudentActions } from 'store/ducks/student';
 import Loading from 'components/Loading';
 import ModalDelete from './ModalDelete';
 
@@ -28,10 +27,6 @@ const columns = [
   {
     id: 'name',
     label: 'Nome',
-  },
-  {
-    id: 'cnpj',
-    label: 'CNPJ',
   },
   {
     id: 'created_at',
@@ -62,14 +57,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function List({ handleEdit, handleInfo }) {
+function List({ handleEdit, classId }) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { loading, data, deleteSuccess } = useSelector((state) => state.school);
+  const { loading, data, deleteSuccess } = useSelector(
+    (state) => state.student
+  );
   const [deleteSchool, setDeleteSchool] = useState(null);
 
   useEffect(() => {
-    dispatch(SchoolActions.loadSchoolsRequest());
+    dispatch(StudentActions.loadStudentsRequest({ class_id: classId }));
   }, []);
 
   const handleClose = () => {
@@ -78,47 +75,25 @@ function List({ handleEdit, handleInfo }) {
 
   useEffect(() => {
     if (deleteSuccess) {
-      dispatch(SchoolActions.loadSchoolsRequest());
+      dispatch(StudentActions.loadStudentsRequest({ class_id: classId }));
     }
   }, [deleteSuccess]);
 
   const handleDelete = () => {
-    dispatch(SchoolActions.deleteSchoolRequest(deleteSchool?.id));
+    dispatch(StudentActions.deleteStudentRequest(deleteSchool?.id));
     setDeleteSchool(null);
   };
 
-  const parseCnpj = useCallback((cnpj) => {
-    let c = '';
-    const mask = '99.999.999/9999-99';
-    let i = 0;
-    mask.replace(/[0-9./-]/g, (dado) => {
-      // eslint-disable-next-line no-plusplus
-      c += +dado === 9 ? cnpj[i++] : dado;
-    });
-    return c;
-  }, []);
-
   const renderRows = useCallback(() => {
     return data?.map((row) => {
-      const { id, name, cnpj, created_at } = row;
+      const { id, name, created_at } = row;
       return (
         <TableRow hover>
           <TableCell>{id}</TableCell>
           <TableCell>{name}</TableCell>
-          <TableCell>{parseCnpj(cnpj)}</TableCell>
           <TableCell>{dayjs(created_at).format('DD/MM/YYYY HH:mm')}</TableCell>
           <TableCell>
             <Box style={{ display: 'flex' }}>
-              <Box mr={1}>
-                <Button
-                  className={classes.infoIcon}
-                  variant="contained"
-                  style={{ height: 30, width: 30 }}
-                  onClick={() => handleInfo(id)}
-                >
-                  <InfoIcon />
-                </Button>
-              </Box>
               <Box mr={1}>
                 <Button
                   className={classes.editIcon}

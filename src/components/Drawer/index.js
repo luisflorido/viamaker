@@ -1,6 +1,7 @@
 import React from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import SchoolIcon from '@material-ui/icons/School';
+import ExitIcon from '@material-ui/icons/ExitToApp';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -11,6 +12,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, CssBaseline, Hidden, IconButton } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
+import { Creators as Actions } from 'store/ducks/auth';
 
 const drawerWidth = 240;
 
@@ -47,9 +50,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ResponsiveDrawer({ children, title }) {
+function ResponsiveDrawer({ children, title, history }) {
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const dispatch = useDispatch();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -58,11 +62,17 @@ function ResponsiveDrawer({ children, title }) {
   const drawer = (
     <div>
       <List>
-        <ListItem button selected>
+        <ListItem button selected onClick={() => history.push('/school')}>
           <ListItemIcon>
             <SchoolIcon />
           </ListItemIcon>
           <ListItemText primary="Escolas" />
+        </ListItem>
+        <ListItem button onClick={() => dispatch(Actions.logout())}>
+          <ListItemIcon>
+            <ExitIcon />
+          </ListItemIcon>
+          <ListItemText primary="Sair" />
         </ListItem>
       </List>
     </div>

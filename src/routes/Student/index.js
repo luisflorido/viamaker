@@ -22,15 +22,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const headerOptions = [
-  { key: 'LIST', label: 'Acessar escolas' },
-  { key: 'CREATE', label: 'Criar escola' },
+  { key: 'LIST', label: 'Acessar alunos' },
+  { key: 'CREATE', label: 'Criar alunos' },
 ];
 
-function School({ history }) {
-  const { id: schoolId } = useParams();
+function Class({ history }) {
+  const { id: schoolId, idClass: classId, idStudent } = useParams();
   const classes = useStyles();
   const [headerSelected, setHeaderSelected] = useState(
-    headerOptions[schoolId ? 1 : 0].key
+    headerOptions[idStudent ? 1 : 0].key
   );
 
   const handleCreateSuccess = () => {
@@ -38,32 +38,34 @@ function School({ history }) {
   };
 
   useEffect(() => {
-    if (schoolId) {
+    if (idStudent) {
       setHeaderSelected(headerOptions[1].key);
     }
-  }, [schoolId]);
+  }, [idStudent]);
 
   const handleEdit = (id) => {
-    history.push(`/school/${id}`);
-  };
-
-  const handleInfo = (id) => {
-    history.push(`/school/${id}/class`);
+    history.push(`/school/${schoolId}/class/${classId}/student/${id}`);
   };
 
   const renderContent = useCallback(() => {
     if (headerSelected === 'LIST') {
-      return <List handleEdit={handleEdit} handleInfo={handleInfo} />;
+      return <List classId={classId} handleEdit={handleEdit} />;
     }
     if (headerSelected === 'CREATE') {
-      return <Create id={schoolId} handleCreateSuccess={handleCreateSuccess} />;
+      return (
+        <Create
+          id={idStudent}
+          classId={classId}
+          handleCreateSuccess={handleCreateSuccess}
+        />
+      );
     }
     return <></>;
   }, [headerSelected]);
 
   return (
     <div className={classes.root}>
-      <Drawer title="ESCOLAS" history={history}>
+      <Drawer title="ALUNOS" history={history}>
         <Header
           selected={headerSelected}
           setSelected={setHeaderSelected}
@@ -75,4 +77,4 @@ function School({ history }) {
   );
 }
 
-export default School;
+export default Class;
